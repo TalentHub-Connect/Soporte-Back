@@ -35,6 +35,17 @@ public class SupportTicketController {
         return ResponseEntity.ok(supportTicketService.createTicket(ticket));
     }
 
+    @PutMapping("/{ticketId}/update-answer")
+    public ResponseEntity<SupportTicket> updateAnswer(@PathVariable Integer ticketId, @RequestBody SupportTicket request) {
+        return supportTicketService.getTicketById(ticketId)
+                .map(ticket -> {
+                    ticket.setAnswer(request.getAnswer());
+                    supportTicketService.updateTicket(ticket);
+                    return ResponseEntity.ok(ticket);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<SupportTicket> updateTicket(@PathVariable Integer id, @RequestBody SupportTicket ticket) {
         ticket.setId(id);
